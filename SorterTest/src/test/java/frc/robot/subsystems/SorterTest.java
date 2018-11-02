@@ -9,6 +9,10 @@ import org.junit.*;
 import static org.mockito.Mockito.*;
 
 public class SorterTest {
+    static {
+        HLUsageReporting.SetImplementation(new HLUsageReporting.Null()); // CCB: Magic bits to turn off wpi usage reporting...nonsense dependency
+    }
+
     @Test
     public void itShouldExtendPistonWhenEjecting()
     {
