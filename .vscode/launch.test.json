@@ -1,0 +1,30 @@
+{
+    "run": {
+        "default": "SorterTest",
+        "items": [
+            {
+                "name": "SorterTest",
+                "projectName": "SorterTest",
+                "workingDirectory": "c:\\Users\\chuck\\Documents\\Ball-Sorter-Testing\\SorterTest",
+                "args": [],
+                "vmargs": [],
+                "env": {"PATH": "C:\\Users\\chuck\\Documents\\Ball-Sorter-Testing\\SorterTest\\build\\tmp\\jniExtractDir"},
+                "preLaunchTask": ""
+            }
+        ]
+    },
+    "debug": {
+        "default": "SorterTest",
+        "items": [
+            {
+                "name": "SorterTest",
+                "projectName": "SorterTest",
+                "workingDirectory": "c:\\Users\\chuck\\Documents\\Ball-Sorter-Testing\\SorterTest",
+                "args": [],
+                "vmargs": [],
+                "env": {"PATH": "C:\\Users\\chuck\\Documents\\Ball-Sorter-Testing\\SorterTest\\build\\tmp\\jniExtractDir"},
+                "preLaunchTask": ""
+            }
+        ]
+    }
+}
