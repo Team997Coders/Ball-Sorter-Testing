@@ -27,7 +27,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
  * project.
  */
 public class Robot extends TimedRobot {
-  public static Sorter sorter = new Sorter();
+  public static Sorter sorter = Sorter.Create();  //CCB: Call new factory method
   public static OI m_oi;
   public static NetworkTableInstance inst;
   public static NetworkTable table;

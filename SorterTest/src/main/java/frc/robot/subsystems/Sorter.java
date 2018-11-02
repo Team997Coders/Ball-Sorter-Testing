@@ -20,11 +20,28 @@ import frc.robot.Robot;
  * Add your docs here.
  */
 public class Sorter extends Subsystem {
-  private VictorSP motor = new VictorSP(RobotMap.Ports.sorterMotor);
-  private DoubleSolenoid piston = new DoubleSolenoid(RobotMap.Ports.sorterPistonOut, RobotMap.Ports.sorterPistonIn);
-  private DigitalOutput ballSensor = new DigitalOutput(RobotMap.Ports.ballSensor);
+  private VictorSP motor;
+  private DoubleSolenoid piston;
+  private DigitalOutput ballSensor;
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
+
+  // CCB: External dependencies should be "injected" into this class to make it more testable.
+  // You can then create a static factory (see NewSorter) on this class if you like so that you do not have to
+  // do the new dependent object creation ceremony every time you want an instance of a Sorter.
+  public Sorter(VictorSP motor, DoubleSolenoid piston, DigitalOutput ballSensor) {
+    this.motor = motor;
+    this.piston = piston;
+    this.ballSensor = ballSensor;
+  }
+
+  //CCB: Sorter factory
+  public static Sorter Create() {
+    VictorSP motor = new VictorSP(RobotMap.Ports.sorterMotor);
+    DoubleSolenoid piston = new DoubleSolenoid(RobotMap.Ports.sorterPistonOut, RobotMap.Ports.sorterPistonIn);
+    DigitalOutput ballSensor = new DigitalOutput(RobotMap.Ports.ballSensor);
+    return new Sorter(motor, piston, ballSensor);
+  }
 
   public void extendPiston() {
     piston.set(Value.kForward);
@@ -34,8 +51,16 @@ public class Sorter extends Subsystem {
     piston.set(Value.kReverse);
   }
 
-  public Value getPiston() {
+  // CCB: We are not getting the piston object here, so rename to be more clear.
+  public Value getPistonPosition() {
     return piston.get();
+  }
+
+  public void ejectBall() {
+    // TODO: There is probably some tunable delay that needs to go here
+    extendPiston();
+    // TODO: There is probably some tunable delay that needs to go here
+    retractPiston();
   }
 
   public boolean getBallSensor() {

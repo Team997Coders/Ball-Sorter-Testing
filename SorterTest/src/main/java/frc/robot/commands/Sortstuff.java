@@ -55,7 +55,7 @@ public class Sortstuff extends Command {
 
         Robot.sorter.extendPiston();
     
-    } else if (Robot.sorter.getPiston() == DoubleSolenoid.Value.kForward) {
+    } else if (Robot.sorter.getPistonPosition() == DoubleSolenoid.Value.kForward) { //CCB: Renamed to method for clarity
     
       Robot.sorter.retractPiston();
     
