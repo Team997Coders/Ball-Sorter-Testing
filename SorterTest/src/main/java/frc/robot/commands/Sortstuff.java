@@ -17,8 +17,8 @@ import frc.robot.Robot;
 public class Sortstuff extends Command {
 
   private Queue<String> ballQueue;
-  private boolean seenBall;
-  private boolean sortingBall;
+  private boolean seenBall; //if true, robot has seen ball with camera, and is waiting for it to leave the fov.
+  private boolean sortingBall; //if true and ball is not visible, sets to false and clears the first item in the queue.
 
   public Sortstuff() {
     requires(Robot.sorter);
@@ -29,7 +29,7 @@ public class Sortstuff extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    seenBall = false;
+    seenBall = false; //
     sortingBall = false;
   }
 
@@ -39,7 +39,7 @@ public class Sortstuff extends Command {
     if (Robot.ballType.equals("")) {
       seenBall = false;
     } else if (seenBall == false) {
-      ballQueue.add(Robot.ballType.getString("error"));
+      ballQueue.add(Robot.ballType.getString("error")); //"error" for if it can't return a value.
       seenBall = true;
       //TODO figure out a way to correct sync errors. 
     }
@@ -51,7 +51,7 @@ public class Sortstuff extends Command {
       ballQueue.poll();
     }
 
-    if (Robot.sorter.getBallSensor() && ballQueue.peek() == "red") {
+    if (Robot.sorter.getBallSensor() && ballQueue.peek() == "red") { //TODO change red to a variable for unwanted balls
 
         Robot.sorter.extendPiston();
     

@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import frc.robot.RobotMap;
 import frc.robot.Robot;
+import frc.robot.commands.SortStuff;
 
 /**
  * Add your docs here.
@@ -23,8 +24,6 @@ public class Sorter extends Subsystem {
   private VictorSP motor = new VictorSP(RobotMap.Ports.sorterMotor);
   private DoubleSolenoid piston = new DoubleSolenoid(RobotMap.Ports.sorterPistonOut, RobotMap.Ports.sorterPistonIn);
   private DigitalOutput ballSensor = new DigitalOutput(RobotMap.Ports.ballSensor);
-  // Put methods for controlling this subsystem
-  // here. Call these from Commands.
 
   public void extendPiston() {
     piston.set(Value.kForward);
@@ -38,12 +37,13 @@ public class Sorter extends Subsystem {
     return piston.get();
   }
 
-  public boolean getBallSensor() {
+  public boolean getBallSensor() { //is there a ball in front of the piston.
     return ballSensor.get();
   }
 
   @Override
   public void initDefaultCommand() {
+    setDefaultCommand(new SortStuff())
     // Set the default command for a subsystem here.
     // setDefaultCommand(new MySpecialCommand());
   }

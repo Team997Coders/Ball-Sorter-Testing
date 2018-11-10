@@ -132,7 +132,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     Scheduler.getInstance().run();
 
-    ballType.setString("blue"); //get the camera output and such here.
+    ballType.setString("blue"); //get the camera output and such here. From a network table. For fun.
   }
 
   /**
