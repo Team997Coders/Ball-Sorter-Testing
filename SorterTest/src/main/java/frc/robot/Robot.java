@@ -18,6 +18,7 @@ import frc.robot.subsystems.Sorter;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import frc.robot.misc.Color;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -32,6 +33,9 @@ public class Robot extends TimedRobot {
   public static NetworkTableInstance inst;
   public static NetworkTable table;
   public static NetworkTableEntry ballType;
+
+  public static Color teamColor = Color.blue;
+  public static boolean sortingBalls = true;
 
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();

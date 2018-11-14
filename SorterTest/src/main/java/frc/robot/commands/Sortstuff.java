@@ -16,10 +16,6 @@ import frc.robot.Robot;
 
 public class Sortstuff extends Command {
 
-  private Queue<String> ballQueue;
-  private boolean seenBall; //if true, robot has seen ball with camera, and is waiting for it to leave the fov.
-  private boolean sortingBall; //if true and ball is not visible, sets to false and clears the first item in the queue.
-
   public Sortstuff() {
     requires(Robot.sorter);
     // Use requires() here to declare subsystem dependencies
@@ -29,36 +25,18 @@ public class Sortstuff extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    seenBall = false; //
-    sortingBall = false;
+    Robot.sorter.resetSeenValues();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if (Robot.ballType.equals("")) {
-      seenBall = false;
-    } else if (seenBall == false) {
-      ballQueue.add(Robot.ballType.getString("error")); //"error" for if it can't return a value.
-      seenBall = true;
-      //TODO figure out a way to correct sync errors. 
-    }
-
-    if (Robot.sorter.getBallSensor() && !sortingBall) {
-      sortingBall = true;
-    } else if (!Robot.sorter.getBallSensor() && sortingBall) {
-      sortingBall = false;
-      ballQueue.poll();
-    }
-
-    if (Robot.sorter.getBallSensor() && ballQueue.peek() == "red") { //TODO change red to a variable for unwanted balls
-
-        Robot.sorter.extendPiston();
-    
-    } else if (Robot.sorter.getPiston() == DoubleSolenoid.Value.kForward) {
-    
-      Robot.sorter.retractPiston();
-    
+    if (Robot.sortingBalls) {
+      Robot.sorter.manageQueue();
+      /* this needs to happen every 500ms, otherwise the camera dies.
+      *possible fix only have sortingBalls equal true every 500ms?
+      *even then it might break.
+      */
     }
   }
 
