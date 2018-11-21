@@ -139,7 +139,7 @@ public class Sorter extends Subsystem {
 
   @Override
   public void initDefaultCommand() {
-    setDefaultCommand(new Sortstuff());
+    setDefaultCommand(new Sortstuff(true, this)); //boolean verbose, which sorter to use;
     // Set the default command for a subsystem here.
     // setDefaultCommand(new MySpecialCommand());
   }

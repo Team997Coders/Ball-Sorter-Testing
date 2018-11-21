@@ -12,12 +12,23 @@ import java.util.Queue;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Relay.Value;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.Robot;
+import frc.robot.subsystems.Sorter;
+import java.util.concurrent.*;
+import static java.lang.System.nanoTime;
 
 public class Sortstuff extends Command {
 
-  public Sortstuff() {
+  long currentTime;
+  long oldTime;
+  boolean verbose;
+  Sorter sorter;
+
+  public Sortstuff(boolean verbose, Sorter sorter) {
     requires(Robot.sorter);
+    this.sorter = sorter;
+    this.verbose = verbose;
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
   }
@@ -26,17 +37,20 @@ public class Sortstuff extends Command {
   @Override
   protected void initialize() {
     Robot.sorter.resetSeenValues();
+    currentTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime());
+    oldTime = currentTime;
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if (Robot.sortingBalls) {
-      Robot.sorter.manageQueue();
-      /* this needs to happen every 500ms, otherwise the camera dies.
-      *possible fix only have sortingBalls equal true every 500ms?
-      *even then it might break.
-      */
+    currentTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime());
+    if (Robot.sortingBalls && currentTime > (oldTime + 500)) {
+      sorter.manageQueue();
+      oldTime = currentTime;
+      if (verbose) {
+        System.out.println("ran manageQueue @ time " + currentTime + "ms.");
+      }
     }
   }
 
