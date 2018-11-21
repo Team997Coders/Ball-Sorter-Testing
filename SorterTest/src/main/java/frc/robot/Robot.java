@@ -28,6 +28,8 @@ import frc.robot.misc.Color;
  * project.
  */
 public class Robot extends TimedRobot {
+  // TODO: Timmothy, you will need to declare your command, then instantiate your command, with a separately instantiated
+  // sorter subsystem.  Then schedule your command to start.  Don't make them statics...no reason to.
   public static Sorter sorter = new Sorter();
   public static OI m_oi;
   public static NetworkTableInstance inst;
@@ -35,7 +37,6 @@ public class Robot extends TimedRobot {
   public static NetworkTableEntry ballType;
 
   public static Color teamColor = Color.blue;
-  public static boolean sortingBalls = true;
 
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();

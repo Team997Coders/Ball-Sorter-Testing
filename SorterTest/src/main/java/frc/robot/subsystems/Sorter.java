@@ -27,7 +27,8 @@ import org.opencv.core.Mat;
  * Add your docs here.
  */
 public class Sorter extends Subsystem {
-
+  // TODO: Timmothy, don't directly instantiate hardware like this. Make these injectable into a constructor.
+  // You can then create a static factory method if you want to wrap up the creating for the user of the class.
   private VictorSP motor = new VictorSP(RobotMap.Ports.sorterMotor);
   private DoubleSolenoid piston = new DoubleSolenoid(RobotMap.Ports.sorterPistonOut, RobotMap.Ports.sorterPistonIn);
   private DigitalOutput ballSensor = new DigitalOutput(RobotMap.Ports.ballSensor);
@@ -139,7 +140,7 @@ public class Sorter extends Subsystem {
 
   @Override
   public void initDefaultCommand() {
-    setDefaultCommand(new Sortstuff(true, this)); //boolean verbose, which sorter to use;
+    setDefaultCommand(new Sortstuff(true, this, true)); //boolean verbose, which sorter to use;
     // Set the default command for a subsystem here.
     // setDefaultCommand(new MySpecialCommand());
   }

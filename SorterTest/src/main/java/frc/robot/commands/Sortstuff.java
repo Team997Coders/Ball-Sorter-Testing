@@ -24,11 +24,13 @@ public class Sortstuff extends Command {
   long oldTime;
   boolean verbose;
   Sorter sorter;
+  boolean enabled;
 
-  public Sortstuff(boolean verbose, Sorter sorter) {
-    requires(Robot.sorter);
+  public Sortstuff(boolean verbose, Sorter sorter, boolean enabled) {
+    requires(sorter);
     this.sorter = sorter;
     this.verbose = verbose;
+    this.enabled = enabled;
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
   }
@@ -36,7 +38,7 @@ public class Sortstuff extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    Robot.sorter.resetSeenValues();
+    sorter.resetSeenValues();
     currentTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime());
     oldTime = currentTime;
   }
@@ -45,7 +47,7 @@ public class Sortstuff extends Command {
   @Override
   protected void execute() {
     currentTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime());
-    if (Robot.sortingBalls && currentTime > (oldTime + 500)) {
+    if (enabled && currentTime > (oldTime + 500)) {
       sorter.manageQueue();
       oldTime = currentTime;
       if (verbose) {
