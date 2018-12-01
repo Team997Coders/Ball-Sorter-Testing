@@ -7,33 +7,26 @@
 
 package frc.robot.commands;
 
-import java.util.Queue;
-
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.Relay.Value;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import frc.robot.Robot;
 import frc.robot.Robot;
 import frc.robot.subsystems.Sorter;
 import java.util.concurrent.*;
-import static java.lang.System.nanoTime;
 
-public class Sortstuff extends Command {
+public class SorterTest extends Command {
 
   long currentTime;
   long oldTime;
   boolean verbose;
   Sorter sorter;
 
-  public Sortstuff(boolean verbose, Sorter sorter) {
+  public SorterTest(boolean verbose, Sorter sorter) { 
     requires(Robot.sorter);
-    this.sorter = sorter;
     this.verbose = verbose;
-    // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
+    this.sorter = sorter;
+
   }
 
-  // Called just before this Command runs the first time
   @Override
   protected void initialize() {
     sorter.resetSeenValues();
@@ -41,32 +34,29 @@ public class Sortstuff extends Command {
     oldTime = currentTime;
   }
 
-  // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    sorter.updateSmartdashboard();
+    sorter.setMotor(-0.75);
     currentTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime());
-    if (Robot.sortingBalls && currentTime > (oldTime + 500)) {
-      sorter.manageQueue();
+    if (currentTime > (oldTime + 500)) {
+        sorter.testSensor(verbose);
       oldTime = currentTime;
       if (verbose) {
-        System.out.println("ran manageQueue @ time " + currentTime + "ms.");
+        System.out.println("ran sorter.testSensor @ time " + currentTime + "ms.");
       }
     }
   }
 
-  // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
     return false;
   }
 
-  // Called once after isFinished returns true
   @Override
   protected void end() {
   }
 
-  // Called when another command which requires one or more of the same
-  // subsystems is scheduled to run
   @Override
   protected void interrupted() {
   }

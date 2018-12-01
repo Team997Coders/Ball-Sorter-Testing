@@ -14,11 +14,13 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.AutoDefault;
+import frc.robot.commands.PistonTest;
 import frc.robot.subsystems.Sorter;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.misc.Color;
+import frc.robot.commands.SorterTest;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -48,6 +50,8 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     m_oi = new OI();
     m_chooser.addDefault("Default Auto", new AutoDefault());
+    m_chooser.addObject("Test Sorter BB Sensor", new SorterTest(true, sorter));
+    m_chooser.addObject("Toggle sorter solenoid", new PistonTest(sorter));
     // chooser.addObject("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", m_chooser);
 
@@ -66,6 +70,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    sorter.updateSmartdashboard();
   }
 
   /**
@@ -80,6 +85,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
     Scheduler.getInstance().run();
+    
   }
 
   /**

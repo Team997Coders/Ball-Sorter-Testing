@@ -15,10 +15,9 @@ package frc.robot;
  */
 public class RobotMap {
   public class Ports {
-    public final static int sorterMotor = 0;
-    public final static int sorterPistonOut = 0;
-    public final static int sorterPistonIn = 1;
-    public final static int ballSensor = 0;
+    public final static int sorterMotor = 3;
+    public final static int sorterPiston = 2;
+    public final static int ballSensor = 0; //beam break sensor. (DigitalOutput);
 
   }
 }

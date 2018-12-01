@@ -27,7 +27,7 @@ public class BlueBall {
 
 	//Outputs
 	private Mat hsvThresholdOutput = new Mat();
-	private MatOfKeyPoint findBlobsOutput = new MatOfKeyPoint();
+	public MatOfKeyPoint findBlobsOutput = new MatOfKeyPoint();
 
 	static {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
