@@ -29,7 +29,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Sorter extends Subsystem {
 
-  private VictorSP motor = new VictorSP(RobotMap.Ports.sorterMotor);
+  private VictorSP leftMotor = new VictorSP(RobotMap.Ports.leftSorterMotor);
+  private VictorSP rightMotor = new VictorSP(RobotMap.Ports.rightSorterMotor);
   private Solenoid piston = new Solenoid(RobotMap.Ports.sorterPiston);
   private DigitalOutput ballSensor = new DigitalOutput(RobotMap.Ports.ballSensor);
 
@@ -45,7 +46,7 @@ public class Sorter extends Subsystem {
 
   public Sorter() {
      // Init components
-    piston.setPulseDuration(0.5); //a test to see if i can get around some timing issues.
+    piston.setPulseDuration(0.075); //a test to see if i can get around some timing issues.
 
     //TODO uncomment this, commented out for console spam.
      /*camera0 = new UsbCamera("Camera0", 0); 
@@ -175,11 +176,17 @@ public class Sorter extends Subsystem {
   }
 
   public boolean getBallSensor() { //is there a ball in front of the piston.
-    return ballSensor.get();
+    return !ballSensor.get();
   }
 
   public void setMotor(double speed) {
-    motor.set(speed);
+    leftMotor.set(-speed);
+    rightMotor.set(-speed);
+  }
+
+  public void stopMotors() {
+    leftMotor.set(0);
+    rightMotor.set(0);
   }
 
   public void updateSmartdashboard() {
