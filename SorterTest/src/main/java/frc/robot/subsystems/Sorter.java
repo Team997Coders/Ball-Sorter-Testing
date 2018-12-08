@@ -23,6 +23,9 @@ import frc.robot.misc.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.opencv.core.Mat;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.AnalogInput;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Add your docs here.
@@ -32,7 +35,8 @@ public class Sorter extends Subsystem {
   private VictorSP leftMotor = new VictorSP(RobotMap.Ports.leftSorterMotor);
   private VictorSP rightMotor = new VictorSP(RobotMap.Ports.rightSorterMotor);
   private Solenoid piston = new Solenoid(RobotMap.Ports.sorterPiston);
-  private DigitalOutput ballSensor = new DigitalOutput(RobotMap.Ports.ballSensor);
+  //private DigitalInput ballSensor = new DigitalInput(RobotMap.Ports.ballSensor);
+  private AnalogInput ballSensor = new AnalogInput(RobotMap.Ports.ballSensor);
 
   public UsbCamera camera0;
   public CvSink imageSink;
@@ -43,10 +47,12 @@ public class Sorter extends Subsystem {
   private boolean seenBall; //if true, robot has seen ball with camera, and is waiting for it to leave the fov.
   private boolean sortingBall; //if true and ball is not visible, sets to false and clears the first item in the queue.
   private Queue<String> ballQueue;
+  private long oldTime;
+  private long currentTime;
 
   public Sorter() {
      // Init components
-    piston.setPulseDuration(0.075); //a test to see if i can get around some timing issues.
+    piston.setPulseDuration(0.05); //a test to see if i can get around some timing issues.
 
     //TODO uncomment this, commented out for console spam.
      /*camera0 = new UsbCamera("Camera0", 0); 
@@ -60,29 +66,18 @@ public class Sorter extends Subsystem {
      redBall = new RedBall();
   }
 
-
   public void testSensor(boolean verbose) {
+    currentTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime());
+
+    //TODO add an unjamming button that reverses the motors.
     if (getBallSensor() && !sortingBall) {
       sortingBall = true;
+      oldTime = currentTime;
+    }
 
-      if (verbose) {System.out.println("Sorter- Found ball");}
-
-    } else if (!getBallSensor() && sortingBall) {
-      //Test to see if I can get around certain timing issues.
-      
+    if (currentTime > (oldTime + 25 /*ms*/) && sortingBall) {
       piston.startPulse();
-      if (verbose) {System.out.println("Sorter- Started .5 second pulse for piston");}
       sortingBall = false;
-      
-      
-      /*if (!getPiston()) {
-        extendPiston();
-        if (verbose) {System.out.println("Extending piston");}
-      } else if (getPiston()) {
-        retractPiston();
-        sortingBall = false;
-        if (verbose) {System.out.println("Retracting piston");} //This is going to break since it will retract as soon as it extends.
-      }*/
     }
   }
 
@@ -176,7 +171,8 @@ public class Sorter extends Subsystem {
   }
 
   public boolean getBallSensor() { //is there a ball in front of the piston.
-    return !ballSensor.get();
+    return ballSensor.getVoltage() < 0.1;
+      //return !ballSensor.get();
   }
 
   public void setMotor(double speed) {
@@ -191,6 +187,7 @@ public class Sorter extends Subsystem {
 
   public void updateSmartdashboard() {
     SmartDashboard.putBoolean("Piston Extended:", getPiston());
+    SmartDashboard.putNumber("Ball sensor voltage", ballSensor.getVoltage());
     SmartDashboard.putBoolean("Ball in BB sensor", getBallSensor());
     SmartDashboard.putBoolean("seen Ball", sortingBall);
   }

@@ -37,7 +37,7 @@ public class SorterTest extends Command {
   @Override
   protected void execute() {
     sorter.updateSmartdashboard();
-    sorter.setMotor(-0.225);
+    sorter.setMotor(-0.5);
     sorter.testSensor(verbose);
     currentTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime());
     if (currentTime > (oldTime + 500)) {

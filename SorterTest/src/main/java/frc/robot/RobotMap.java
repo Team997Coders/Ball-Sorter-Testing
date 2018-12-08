@@ -18,7 +18,7 @@ public class RobotMap {
     public final static int leftSorterMotor = 1;
     public final static int rightSorterMotor = 3;
     public final static int sorterPiston = 2;
-    public final static int ballSensor = 5; //beam break sensor. (DigitalOutput);
+    public final static int ballSensor = 3; //beam break sensor. (DigitalOutput);
 
   }
 }
