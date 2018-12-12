@@ -19,12 +19,15 @@ import frc.robot.commands.Sortstuff;
 import java.util.Queue;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.CvSink;
+import edu.wpi.cscore.MjpegServer;
 import frc.robot.misc.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.opencv.core.Mat;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.CameraServer;
+
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -54,13 +57,14 @@ public class Sorter extends Subsystem {
      // Init components
     piston.setPulseDuration(0.05); //a test to see if i can get around some timing issues.
 
-    //TODO uncomment this, commented out for console spam.
-     /*camera0 = new UsbCamera("Camera0", 0); 
+     camera0 = new UsbCamera("Camera0", 0); 
+     //camera0 = CameraServer.getInstance().startAutomaticCapture();
      camera0.setResolution(320,240);
+     
  
      imageSink = new CvSink("CV Image Grabber");      //Starts a CV sink to pull camera footage into a MAT image file
      imageSink.setSource(camera0);
-    */
+  
 
      blueBall = new BlueBall();
      redBall = new RedBall();
@@ -87,6 +91,12 @@ public class Sorter extends Subsystem {
     } else {
       extendPiston();
     }
+  }
+
+  public void testCamera() {
+    CameraOutput cameraOutput = getCameraOutput();
+    System.out.println("blue:" + cameraOutput.blueCount);
+    System.out.println("red:" + cameraOutput.redCount);
   }
 
   public void manageQueue() {
@@ -124,8 +134,14 @@ public class Sorter extends Subsystem {
 
   public CameraOutput getCameraOutput() {
 
-    blueBall.process(getImage());
-    redBall.process(getImage());
+    Mat img = getImage();
+
+    if (img == null) {
+      return new CameraOutput(0, 0);
+    }
+
+    blueBall.process(img);
+    redBall.process(img);
 
     CameraOutput output = new CameraOutput(redBall.getOutput().size(), blueBall.getOutput().rows());
     return output;
@@ -150,7 +166,16 @@ public class Sorter extends Subsystem {
     } else { return Color.NULL; }*/
   }
 
-  public Mat getImage() { Mat image = null; imageSink.grabFrame(image); return image; } // returns MAT image from CvSink
+  public Mat getImage() { 
+    Mat image = null;
+    try {
+      imageSink.grabFrame(image, 0.5);
+    } catch (Exception e) {
+      System.out.println("No Image");
+      e.printStackTrace();
+    }
+    return image;
+  } // returns MAT image from CvSink
 
   public void extendPiston() {
     piston.set(true);

@@ -21,6 +21,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.misc.Color;
 import frc.robot.commands.SorterTest;
+import frc.robot.commands.SorterCameraTest;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -52,6 +53,7 @@ public class Robot extends TimedRobot {
     m_chooser.addDefault("Default Auto", new AutoDefault());
     m_chooser.addObject("Test Sorter BB Sensor", new SorterTest(true, sorter));
     m_chooser.addObject("Toggle sorter solenoid", new PistonTest(sorter));
+    m_chooser.addObject("Test Camera", new SorterCameraTest(sorter, true));
     // chooser.addObject("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", m_chooser);
 
