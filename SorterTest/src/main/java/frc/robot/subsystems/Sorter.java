@@ -26,6 +26,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.AnalogInput;
 import java.util.concurrent.TimeUnit;
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
+
 
 /**
  * Add your docs here.
@@ -49,10 +51,16 @@ public class Sorter extends Subsystem {
   private Queue<String> ballQueue;
   private long oldTime;
   private long currentTime;
+  private NetworkTable networkTable;
 
   public Sorter() {
      // Init components
     piston.setPulseDuration(0.05); //a test to see if i can get around some timing issues.
+    NetworkTable.setClientMode();
+    ///NetworkTable.setIPAddress("localhost");
+    NetworkTable.initialize();
+    this.networkTable = NetworkTable.getTable("SmartDashboard");
+
 
     //TODO uncomment this, commented out for console spam.
      /*camera0 = new UsbCamera("Camera0", 0); 
@@ -90,7 +98,7 @@ public class Sorter extends Subsystem {
   }
 
   public void manageQueue() {
-    CameraOutput cameraOutput = getCameraOutput();
+    /*CameraOutput cameraOutput = getCameraOutput();
     if (cameraOutput.blueCount == 0 && cameraOutput.redCount == 0) {
       seenBall = false;
     } else if (seenBall == false) {
@@ -119,15 +127,15 @@ public class Sorter extends Subsystem {
     
       retractPiston();
     
-    }
+    }*/
   }
 
   public CameraOutput getCameraOutput() {
 
-    blueBall.process(getImage());
-    redBall.process(getImage());
+    /*blueBall.process(getImage());
+    redBall.process(getImage());*/
 
-    CameraOutput output = new CameraOutput(redBall.getOutput().size(), blueBall.getOutput().rows());
+    CameraOutput output = new CameraOutput((int)networkTable.getNumber("BlueBallCount", 0), (int)networkTable.getNumber("RedBallCount", 0));
     return output;
     
     //These methods are different because I picked the sketchy camera code to use. ^^^
