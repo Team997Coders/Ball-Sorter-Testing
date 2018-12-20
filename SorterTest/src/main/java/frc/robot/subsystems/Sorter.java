@@ -72,6 +72,9 @@ public class Sorter extends Subsystem {
 
      blueBall = new BlueBall();
      redBall = new RedBall();
+    
+     NetworkTable.setClientMode();
+     NetworkTable.initialize();
 
      cameraOutputTable = NetworkTableInstance.getDefault().getTable("SmartDashboard");
   }
