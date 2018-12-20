@@ -25,6 +25,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.opencv.core.Mat;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.CameraServer;
 
@@ -53,6 +55,8 @@ public class Sorter extends Subsystem {
   private long oldTime;
   private long currentTime;
 
+  private NetworkTable cameraOutputTable;
+
   public Sorter() {
      // Init components
     piston.setPulseDuration(0.05); //a test to see if i can get around some timing issues.
@@ -68,6 +72,8 @@ public class Sorter extends Subsystem {
 
      blueBall = new BlueBall();
      redBall = new RedBall();
+
+     cameraOutputTable = NetworkTableInstance.getDefault().getTable("SmartDashboard");
   }
 
   public void testSensor(boolean verbose) {
@@ -94,7 +100,8 @@ public class Sorter extends Subsystem {
   }
 
   public void testCamera() {
-    CameraOutput cameraOutput = getCameraOutput();
+    //CameraOutput cameraOutput = getCameraOutput();
+    CameraOutput cameraOutput = getNetworkOutput();
     System.out.println("blue:" + cameraOutput.blueCount);
     System.out.println("red:" + cameraOutput.redCount);
   }
@@ -208,6 +215,18 @@ public class Sorter extends Subsystem {
   public void stopMotors() {
     leftMotor.set(0);
     rightMotor.set(0);
+  }
+
+  /*
+   *  Use this function to get ball count from network tables
+   * 
+   *  @return CameraOutput
+   */
+  public CameraOutput getNetworkOutput() {
+    double red = cameraOutputTable.getEntry("RedBallCount").getDouble(0);
+    double blue = cameraOutputTable.getEntry("BlueBallCount").getDouble(0);
+
+    return new CameraOutput((int)red, (int)blue);
   }
 
   public void updateSmartdashboard() {
