@@ -28,9 +28,6 @@ public class SorterCameraTest extends Command {
 
   @Override
   protected void execute() {
-    try {
-      Thread.sleep(500);
-    } catch (Exception e) { e.printStackTrace(); }
     sorter.testCamera();
     System.out.println("Ran testSorter()");
   }
@@ -38,7 +35,7 @@ public class SorterCameraTest extends Command {
   @Override
   protected boolean isFinished() {
     
-    return false;
+    return true;
   }
 
   @Override

@@ -40,7 +40,7 @@ public class SorterTest extends Command {
     sorter.setMotor(-0.5);
     sorter.testSensor(verbose);
     currentTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime());
-    if (currentTime > (oldTime + 500)) {
+    if (currentTime > (oldTime + 250)) {
         
       oldTime = currentTime;
       if (verbose) {

@@ -44,14 +44,16 @@ public class Sortstuff extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    sorter.setMotor(-0.5);
     currentTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime());
-    if (Robot.sortingBalls && currentTime > (oldTime + 500)) {
+    if (Robot.sortingBalls && currentTime > (oldTime + 250)) {
       sorter.manageQueue();
       oldTime = currentTime;
       if (verbose) {
         System.out.println("ran manageQueue @ time " + currentTime + "ms.");
       }
     }
+    sorter.managePiston();
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -63,11 +65,13 @@ public class Sortstuff extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
+    sorter.stopMotors();
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
+    sorter.stopMotors();
   }
 }

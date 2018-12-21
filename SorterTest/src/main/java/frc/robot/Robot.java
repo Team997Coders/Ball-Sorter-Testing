@@ -14,13 +14,13 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.AutoDefault;
-import frc.robot.commands.PistonTest;
 import frc.robot.subsystems.Sorter;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.misc.Color;
 import frc.robot.commands.SorterTest;
+import frc.robot.commands.Sortstuff;
 import frc.robot.commands.SorterCameraTest;
 
 /**
@@ -36,9 +36,10 @@ public class Robot extends TimedRobot {
   public static NetworkTableInstance inst;
   public static NetworkTable table;
   public static NetworkTableEntry ballType;
-
-  public static Color teamColor = Color.blue;
   public static boolean sortingBalls = true;
+
+  public static String allianceColor = "blue"; //for our alliance
+  public static String allianceColorEditable = "R"; //for the smartdashboard
 
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -52,14 +53,12 @@ public class Robot extends TimedRobot {
     m_oi = new OI();
     m_chooser.addDefault("Default Auto", new AutoDefault());
     m_chooser.addObject("Test Sorter BB Sensor", new SorterTest(true, sorter));
-    m_chooser.addObject("Toggle sorter solenoid", new PistonTest(sorter));
     m_chooser.addObject("Test Camera", new SorterCameraTest(sorter, true));
+    m_chooser.addObject("Sort things", new Sortstuff(false, sorter));
     // chooser.addObject("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", m_chooser);
+    SmartDashboard.putString("PUT ALLIANCE COLOR HERE (R | B)", allianceColorEditable);
 
-    inst = NetworkTableInstance.create();
-    table = inst.getTable("fakecam");
-    ballType = table.getEntry("ball");
   }
 
   /**
@@ -73,6 +72,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     sorter.updateSmartdashboard();
+    SmartDashboard.putString("allianceColorInternal", allianceColor);
   }
 
   /**
@@ -87,6 +87,13 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
     Scheduler.getInstance().run();
+    if (SmartDashboard.getString("PUT ALLIANCE COLOR HERE (R | B)", "null").startsWith("R")) {
+      allianceColor = "red";
+    } else if (SmartDashboard.getString("PUT ALLIANCE COLOR HERE (R | B)", "null").startsWith("B")) {
+      allianceColor = "blue";
+    } else {
+      allianceColor = SmartDashboard.getString("PUT ALLIANCE COLOR HERE (R | B)", "null");
+    }
     
   }
 
@@ -143,8 +150,6 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     Scheduler.getInstance().run();
-
-    ballType.setString("blue"); //get the camera output and such here. From a network table. For fun.
   }
 
   /**
